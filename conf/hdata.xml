@@ -8,12 +8,17 @@
 	</property>
 	<property>
 		<name>hdata.storage.disruptor.wait.strategy</name>
-		<value>BlockingWaitStrategy</value>
-		<description>线程等待策略，可选项：BlockingWaitStrategy、BusySpinWaitStrategy、SleepingWaitStrategy、YieldingWaitStrategy</description>
+		<value>com.lmax.disruptor.BlockingWaitStrategy</value>
+		<description>线程等待策略</description>
 	</property>
 	<property>
 		<name>hdata.hive.writer.tmp.dir</name>
 		<value>/tmp</value>
 		<description>Hive Writer写入HDFS文件的临时目录</description>
+	</property>
+	<property>
+		<name>jdbc.reader.sql.metric.time.ms</name>
+		<value>3000</value>
+		<description>设定SQL执行时间阈值，超过该值将记录日志中</description>
 	</property>
 </configuration>
