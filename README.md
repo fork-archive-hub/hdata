@@ -1,6 +1,6 @@
 ## HData
 
-HData是一个异构的数据传输工具，致力于使用一个工具解决不同数据源（JDBC、Hive、HDFS、HBase、MongoDB、FTP、Http、CSV、Excel、Kafka等）之间数据交换的问题。HData在设计上同时参考了开源的Sqoop、DataX，却与之有不同的实现。HData采用“框架+插件”的结构，具有较好的扩展性，框架相当于数据缓冲区，插件则为访问不同的数据源提供实现。
+HData是一个异构的ETL数据导入/导出工具，致力于使用一个工具解决不同数据源（JDBC、Hive、HDFS、HBase、MongoDB、FTP、Http、CSV、Excel、Kafka等）之间数据交换的问题。HData在设计上同时参考了开源的Sqoop、DataX，却与之有不同的实现。HData采用“框架+插件”的结构，具有较好的扩展性，框架相当于数据缓冲区，插件则为访问不同的数据源提供实现。
 
 ![HData](./doc/img/1.png)
 
