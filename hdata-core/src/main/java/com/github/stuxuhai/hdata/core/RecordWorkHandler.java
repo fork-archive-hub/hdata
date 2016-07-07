@@ -1,3 +1,10 @@
+/*
+ * 蘑菇街 Inc.
+ * Copyright (c) 2010-2014 All Rights Reserved.
+ *
+ * Author: wuya
+ * Create Date: 2014年6月26日 下午4:35:16
+ */
 package com.github.stuxuhai.hdata.core;
 
 import com.github.stuxuhai.hdata.api.JobContext;

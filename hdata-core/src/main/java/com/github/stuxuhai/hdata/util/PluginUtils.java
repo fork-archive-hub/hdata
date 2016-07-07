@@ -1,3 +1,11 @@
+/*
+ * 蘑菇街 Inc.
+ * Copyright (c) 2010-2016 All Rights Reserved.
+ *
+ * Author: wuya
+ * Create Date: 2016年4月9日 上午11:39:24
+ */
+
 package com.github.stuxuhai.hdata.util;
 
 import java.io.File;

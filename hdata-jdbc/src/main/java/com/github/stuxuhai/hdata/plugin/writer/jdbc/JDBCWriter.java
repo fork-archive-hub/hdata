@@ -26,104 +26,116 @@ import com.google.common.base.Preconditions;
 
 public class JDBCWriter extends Writer {
 
-	private Connection connection = null;
-	private PreparedStatement statement = null;
-	private int count;
-	private int batchInsertSize;
-	private Fields columns;
-	private String table;
-	private Map<String, Integer> columnTypes;
-	private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Constants.DATE_FORMAT_STRING);
-	private static final int DEFAULT_BATCH_INSERT_SIZE = 10000;
-	private static final Logger LOG = LogManager.getLogger(JDBCWriter.class);
+    private Connection connection = null;
+    private PreparedStatement statement = null;
+    private int count;
+    private int batchInsertSize;
+    private Fields columns;
+    private String[] schema;
+    private String table;
+    private Map<String, Integer> columnTypes;
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Constants.DATE_FORMAT_STRING);
+    private static final int DEFAULT_BATCH_INSERT_SIZE = 10000;
+    private static final Logger LOG = LogManager.getLogger(JDBCWriter.class);
 
-	@Override
-	public void prepare(JobContext context, PluginConfig writerConfig) {
-		columns = context.getFields();
-		String driver = writerConfig.getString(JBDCWriterProperties.DRIVER);
-		Preconditions.checkNotNull(driver, "JDBC writer required property: driver");
+    @Override
+    public void prepare(JobContext context, PluginConfig writerConfig) {
+        columns = context.getFields();
+        String driver = writerConfig.getString(JDBCWriterProperties.DRIVER);
+        Preconditions.checkNotNull(driver, "JDBC writer required property: driver");
 
-		String url = writerConfig.getString(JBDCWriterProperties.URL);
-		Preconditions.checkNotNull(url, "HDFS writer required property: url");
+        String schemaStr = writerConfig.getString("schema");
+        if ((schemaStr != null) && (!schemaStr.trim().isEmpty())) {
+            this.schema = schemaStr.split(",");
+        }
 
-		String username = writerConfig.getString(JBDCWriterProperties.USERNAME);
-		String password = writerConfig.getString(JBDCWriterProperties.PASSWORD);
-		String table = writerConfig.getString(JBDCWriterProperties.TABLE);
-		Preconditions.checkNotNull(table, "HDFS writer required property: table");
+        String url = writerConfig.getString(JDBCWriterProperties.URL);
+        Preconditions.checkNotNull(url, "HDFS writer required property: url");
 
-		this.table = table;
-		batchInsertSize = writerConfig.getInt(JBDCWriterProperties.BATCH_INSERT_SIZE, DEFAULT_BATCH_INSERT_SIZE);
-		if (batchInsertSize < 1) {
-			batchInsertSize = DEFAULT_BATCH_INSERT_SIZE;
-		}
+        String username = writerConfig.getString(JDBCWriterProperties.USERNAME);
+        String password = writerConfig.getString(JDBCWriterProperties.PASSWORD);
+        String table = writerConfig.getString(JDBCWriterProperties.TABLE);
+        Preconditions.checkNotNull(table, "HDFS writer required property: table");
 
-		try {
-			connection = JdbcUtils.getConnection(driver, url, username, password);
-			connection.setAutoCommit(false);
-			columnTypes = JdbcUtils.getColumnTypes(connection, table);
+        this.table = table;
+        batchInsertSize = writerConfig.getInt(JDBCWriterProperties.BATCH_INSERT_SIZE, DEFAULT_BATCH_INSERT_SIZE);
+        if (batchInsertSize < 1) {
+            batchInsertSize = DEFAULT_BATCH_INSERT_SIZE;
+        }
 
-			String sql = null;
-			if (columns != null) {
-				String[] placeholder = new String[columns.size()];
-				Arrays.fill(placeholder, "?");
-				sql = String.format("INSERT INTO %s(%s) VALUES(%s)", table, "`" + Joiner.on("`, `").join(columns) + "`",
-						Joiner.on(", ").join(placeholder));
-				LOG.debug(sql);
-				statement = connection.prepareStatement(sql);
-			}
-		} catch (Exception e) {
-			throw new HDataException(e);
-		}
-	}
+        try {
+            connection = JdbcUtils.getConnection(driver, url, username, password);
+            connection.setAutoCommit(false);
+            columnTypes = JdbcUtils.getColumnTypes(connection, table);
 
-	@Override
-	public void execute(Record record) {
-		try {
-			if (statement == null) {
-				String[] placeholder = new String[record.size()];
-				Arrays.fill(placeholder, "?");
-				String sql = String.format("INSERT INTO %s VALUES(%s)", table, Joiner.on(", ").join(placeholder));
-				LOG.debug(sql);
-				statement = connection.prepareStatement(sql);
-			}
+            String sql = null;
+            if (this.schema != null) {
+                String[] placeholder = new String[this.schema.length];
+                Arrays.fill(placeholder, "?");
+                sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
+                        new Object[] { table, "`" + Joiner.on("`, `").join(this.schema) + "`", Joiner.on(", ").join(placeholder) });
+                LOG.debug(sql);
+                this.statement = this.connection.prepareStatement(sql);
+            } else if (this.columns != null) {
+                String[] placeholder = new String[this.columns.size()];
+                Arrays.fill(placeholder, "?");
+                sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
+                        new Object[] { table, "`" + Joiner.on("`, `").join(this.columns) + "`", Joiner.on(", ").join(placeholder) });
+                LOG.debug(sql);
+                this.statement = this.connection.prepareStatement(sql);
+            }
+        } catch (Exception e) {
+            throw new HDataException(e);
+        }
+    }
 
-			for (int i = 0, len = record.size(); i < len; i++) {
-				if (record.get(i) instanceof Timestamp
-						&& !Integer.valueOf(Types.TIMESTAMP).equals(columnTypes.get(columns.get(i).toLowerCase()))) {
-					statement.setObject(i + 1, DATE_FORMAT.format(record.get(i)));
-				} else {
-					statement.setObject(i + 1, record.get(i));
-				}
-			}
+    @Override
+    public void execute(Record record) {
+        try {
+            if (statement == null) {
+                String[] placeholder = new String[record.size()];
+                Arrays.fill(placeholder, "?");
+                String sql = String.format("INSERT INTO %s VALUES(%s)", table, Joiner.on(", ").join(placeholder));
+                LOG.debug(sql);
+                statement = connection.prepareStatement(sql);
+            }
 
-			count++;
-			statement.addBatch();
+            for (int i = 0, len = record.size(); i < len; i++) {
+                if (record.get(i) instanceof Timestamp && !Integer.valueOf(Types.TIMESTAMP).equals(columnTypes.get(columns.get(i).toLowerCase()))) {
+                    statement.setObject(i + 1, DATE_FORMAT.format(record.get(i)));
+                } else {
+                    statement.setObject(i + 1, record.get(i));
+                }
+            }
 
-			if (count % batchInsertSize == 0) {
-				count = 0;
-				statement.executeBatch();
-				connection.commit();
-			}
-		} catch (SQLException e) {
-			throw new HDataException(e);
-		}
-	}
+            count++;
+            statement.addBatch();
 
-	@Override
-	public void close() {
-		try {
-			if (connection != null && statement != null && count > 0) {
-				statement.executeBatch();
-				connection.commit();
-			}
+            if (count % batchInsertSize == 0) {
+                count = 0;
+                statement.executeBatch();
+                connection.commit();
+            }
+        } catch (SQLException e) {
+            throw new HDataException(e);
+        }
+    }
 
-			if (statement != null) {
-				statement.close();
-			}
-		} catch (SQLException e) {
-			throw new HDataException(e);
-		} finally {
-			DbUtils.closeQuietly(connection);
-		}
-	}
+    @Override
+    public void close() {
+        try {
+            if (connection != null && statement != null && count > 0) {
+                statement.executeBatch();
+                connection.commit();
+            }
+
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            throw new HDataException(e);
+        } finally {
+            DbUtils.closeQuietly(connection);
+        }
+    }
 }

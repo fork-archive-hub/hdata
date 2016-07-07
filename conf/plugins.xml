@@ -4,118 +4,90 @@
 	<readers>
 		<reader>
 			<name>jdbc</name>
-			<class>com.mogujie.hdata.plugin.reader.jdbc.JDBCReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.jdbc.JDBCReader</class>
 		</reader>
 		<reader>
 			<name>hive</name>
-			<class>com.mogujie.hdata.plugin.reader.hive.HiveReader</class>
-		</reader>
-		<reader>
-			<name>dump</name>
-			<class>com.mogujie.hdata.plugin.reader.dump.DumpReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.hive.HiveReader</class>
 		</reader>
 		<reader>
 			<name>hdfs</name>
-			<class>com.mogujie.hdata.plugin.reader.hdfs.HDFSReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.hdfs.HDFSReader</class>
 		</reader>
 		<reader>
 			<name>ftp</name>
-			<class>com.mogujie.hdata.plugin.reader.ftp.FTPReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.ftp.FTPReader</class>
 		</reader>
 		<reader>
 			<name>mongodb</name>
-			<class>com.mogujie.hdata.plugin.reader.mongodb.MongoDBReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.mongodb.MongoDBReader</class>
 		</reader>
 		<reader>
 			<name>hbase</name>
-			<class>com.mogujie.hdata.plugin.reader.hbase.HBaseReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.hbase.HBaseReader</class>
 		</reader>
 		<reader>
 			<name>http</name>
-			<class>com.mogujie.hdata.plugin.reader.http.HttpReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.http.HttpReader</class>
 		</reader>
 		<reader>
 			<name>csv</name>
-			<class>com.mogujie.hdata.plugin.reader.csv.CSVReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.csv.CSVReader</class>
 		</reader>
 		<reader>
 			<name>kafka</name>
-			<class>com.mogujie.hdata.plugin.reader.kafka.KafkaReader</class>
-		</reader>
-		<reader>
-			<name>corgi</name>
-			<class>com.mogujie.hdata.plugin.reader.corgi.CorgiReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.kafka.KafkaReader</class>
 		</reader>
 		<reader>
 			<name>console</name>
-			<class>com.mogujie.hdata.plugin.reader.console.ConsoleReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.console.ConsoleReader</class>
 		</reader>
 		<reader>
 			<name>excel</name>
-			<class>com.mogujie.hdata.plugin.excel.reader.ExcelReader</class>
-		</reader>
-		<reader>
-			<name>elasticsearch2</name>
-			<class>com.mogujie.hdata.plugin.reader.elasticsearch2.ElasticSearchReader</class>
-		</reader>
-		<reader>
-			<name>elasticsearch1</name>
-			<class>com.mogujie.hdata.plugin.reader.elasticsearch1.ElasticSearchReader</class>
+			<class>com.github.stuxuhai.hdata.plugin.excel.reader.ExcelReader</class>
 		</reader>
 	</readers>
 
 	<writers>
 		<writer>
 			<name>console</name>
-			<class>com.mogujie.hdata.plugin.writer.console.ConsoleWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.console.ConsoleWriter</class>
 		</writer>
 		<writer>
 			<name>jdbc</name>
-			<class>com.mogujie.hdata.plugin.writer.jdbc.JDBCWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.jdbc.JDBCWriter</class>
 		</writer>
 		<writer>
 			<name>hive</name>
-			<class>com.mogujie.hdata.plugin.writer.hive.HiveWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.hive.HiveWriter</class>
 		</writer>
 		<writer>
 			<name>hdfs</name>
-			<class>com.mogujie.hdata.plugin.writer.hdfs.HDFSWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.hdfs.HDFSWriter</class>
 		</writer>
 		<writer>
 			<name>ftp</name>
-			<class>com.mogujie.hdata.plugin.writer.ftp.FTPWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.ftp.FTPWriter</class>
 		</writer>
 		<writer>
 			<name>mongodb</name>
-			<class>com.mogujie.hdata.plugin.writer.mongodb.MongoDBWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.mongodb.MongoDBWriter</class>
 		</writer>
 		<writer>
 			<name>hbase</name>
-			<class>com.mogujie.hdata.plugin.writer.hbase.HBaseWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.hbase.HBaseWriter</class>
 		</writer>
 		<writer>
 			<name>csv</name>
-			<class>com.mogujie.hdata.plugin.writer.csv.CSVWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.csv.CSVWriter</class>
 		</writer>
 		<writer>
 			<name>kafka</name>
-			<class>com.mogujie.hdata.plugin.writer.kafka.KafkaWriter</class>
-		</writer>
-		<writer>
-			<name>corgi</name>
-			<class>com.mogujie.hdata.plugin.writer.corgi.CorgiWriter</class>
-		</writer>
-		<writer>
-			<name>elasticsearch2</name>
-			<class>com.mogujie.hdata.plugin.writer.elasticsearch2.ElasticSearchWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.reader.kafka.KafkaWriter</class>
 		</writer>
 		<writer>
 			<name>excel</name>
-			<class>com.mogujie.hdata.plugin.excel.writer.ExcelWriter</class>
-		</writer>
-		<writer>
-			<name>elasticsearch1</name>
-			<class>com.mogujie.hdata.plugin.writer.elasticsearch1.ElasticSearchWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.excel.writer.ExcelWriter</class>
 		</writer>
 	</writers>
 </plugins>

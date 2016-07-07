@@ -35,12 +35,21 @@ for f in $HDATA_LIB_DIR/*.jar; do
     HDATA_CLASSPATH=${HDATA_CLASSPATH}:$f;
 done
 
+JAVA_OPTS="$JAVA_OPTS -Xss256k"
+JAVA_OPTS="$JAVA_OPTS -Xms1G -Xmx1G -Xmn512M"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseParNewGC"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
+JAVA_OPTS="$JAVA_OPTS -XX:+CMSClassUnloadingEnabled"
+JAVA_OPTS="$JAVA_OPTS -XX:+CMSParallelRemarkEnabled"
+JAVA_OPTS="$JAVA_OPTS -XX:+DisableExplicitGC"
+JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSInitiatingOccupancyOnly"
+JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError"
+JAVA_OPTS="$JAVA_OPTS -XX:SoftRefLRUPolicyMSPerMB=0"
+
 JAVA_OPTS="$JAVA_OPTS -Dhdata.conf.dir=$HDATA_CONF_DIR"
 JAVA_OPTS="$JAVA_OPTS -Dlog4j.configurationFile=file:///$HDATA_CONF_DIR/log4j2.xml"
 
-MAIN_CLASS="com.suning.hdata.CliDriver"
-if [ "$1" = "execute-sql" ]; then
-    MAIN_CLASS="com.suning.hdata.tool.SQLExecuteTool"
-fi
+MAIN_CLASS="com.github.stuxuhai.hdata.CliDriver"
 
 exec "$JAVA" $JAVA_OPTS -cp "$HDATA_CLASSPATH" $MAIN_CLASS "$@"
