@@ -41,18 +41,24 @@ HData是一个异构的ETL数据导入/导出工具，致力于使用一个工�
 HData框架通过配置读取解析、RingBugffer 缓冲区、线程池封装等技术，统一处理了数据传输中的基本问题，并提供Reader、Splitter、Writer插件接口，基于此可以方便地开发出各种插件，以满足各种数据源访问的需求。
 
 
-#### 【运行命令】
+#### 【编译&运行】
+
+* 编译
+
+执行 *./bin/package-hdata.sh* 命令，执行成功后将会生成压缩包 *./buildhdata.tar.gz* ，然后解压即可。
+
+* 运行
 
 ./bin/hdata --reader READER_NAME -Rk1=v1 -Rk2=v2 --writer WRITER_NAME -Wk1=v1 -Wk2=v2
 
-READER_NAME、WRITER_NAME分别为读/写插件的名称，例如：jdbc、hive
+>READER_NAME、WRITER_NAME分别为读/写插件的名称，例如：jdbc、hive
 Reader插件的参数配置以-R为前缀，Writer插件的参数配置以-W为前缀。
 
 #### 【配置参数】
 
-其中，参数parallelism为读/写并行度，所有插件均有该参数，默认为1。
+**其中，参数parallelism为读/写并行度，所有插件均有该参数，默认为1。**
 
-设置合理的parallelism参数可提高性能。
+**设置合理的parallelism参数可提高性能。**
 
 #### 【Reader配置参数】
 
