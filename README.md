@@ -90,6 +90,9 @@ table|是|表名|
 partitions|否|分区，例如: visit_date='2016-07-07'|
 hadoop.user|否|具有HDFS读权限的用户名|
 hdfs.conf.path|否|hdfs-site.xml配置文件路径|
+select.columns|否|选择读取的字段|
+convert.null|否|设置值为NULL时对应的字符串，默认："NULL"|
+
 
 * hdfs
 
@@ -114,6 +117,7 @@ start.rowkey|否|Rowkey起始值|
 end.rowkey|否|Rowkey结束值|
 columns|是|读取的列，如：:rowkey,cf:start_ip,cf:end_ip|
 schema|是|输出的字段定义，如：id,start_ip,end_ip|
+zookeeper.znode.parent|否|hbase使用的Zookeeper根节点|
 
 * http
 
@@ -189,6 +193,7 @@ username|是|数据库用户名|
 password|是|数据库密码|
 table|是|表名（包含数据库名或schema名），如：db.table|
 batch.insert.size|否|批量插入的记录数，默认值：10000|
+schema|否|字段名配置，一般用于writer和reader的字段名不一致时|
 
 * hive
 
@@ -225,6 +230,7 @@ zookeeper.client.port|否|Zookeeper客户端端口，默认：2181|
 table|是|表名|
 columns|是|列名，如：:rowkey,cf:start_ip|
 batch.insert.size|否|批量插入的记录数，默认值：10000|
+zookeeper.znode.parent|否|hbase使用的Zookeeper根节点|
 
 * kafka
 
