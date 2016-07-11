@@ -45,14 +45,53 @@ HData框架通过配置读取解析、RingBugffer 缓冲区、线程池封装等
 
 * 编译
 
-执行 *./bin/package-hdata.sh* 命令，执行成功后将会生成压缩包 *./buildhdata.tar.gz* ，然后解压即可。
+执行 *./bin/package-hdata.sh* 命令，执行成功后将会生成压缩包 *./build/hdata.tar.gz* ，然后解压即可。
 
 * 运行
+
+##### 1、命令行配置方式
 
 ./bin/hdata --reader READER_NAME -Rk1=v1 -Rk2=v2 --writer WRITER_NAME -Wk1=v1 -Wk2=v2
 
 >READER_NAME、WRITER_NAME分别为读/写插件的名称，例如：jdbc、hive
 Reader插件的参数配置以-R为前缀，Writer插件的参数配置以-W为前缀。
+
+例子（Mysql -> Hive）：
+
+>./bin/hdata --reader jdbc -Rurl="jdbc:mysql://127.0.0.1:3306/testdb" -Rdriver="com.mysql.jdbc.Driver" -Rtable="testtable" -Rusername="username" -Rpassword="password" -Rparallelism=3 --writer hive -Wmetastore.uris="thrift://127.0.0.1:9083" -Whdfs.conf.path="/path/to/hdfs-site.xml" -Wdatabase="default" -Wtable="testtable" -Whadoop.user="hadoop" -Wparallelism=2
+
+##### 2、XML配置方式
+
+job.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<job id="job_example">
+    <reader name="jdbc">
+		<url>jdbc:mysql://127.0.0.1:3306/testdb</url>
+		<driver>com.mysql.jdbc.Driver</driver>
+		<table>testtable</table>
+		<username>username</username>
+		<password>password</password>
+		<parallelism>3</parallelism>
+	</reader>
+
+	<writer name="hive">
+		<metastore.uris>thrift://127.0.0.1:9083</metastore.uris>
+		<hdfs.conf.path>/path/to/hdfs-site.xml</hdfs.conf.path>
+		<database>default</database>
+		<table>testtable</table>
+		<hadoop.user>hadoop</hadoop.user>
+		<parallelism>2</parallelism>
+	</writer>
+</job>
+```
+
+运行命令：
+
+> ./bin/hdata -f /path/to/job.xml
+
 
 #### 【配置参数】
 
