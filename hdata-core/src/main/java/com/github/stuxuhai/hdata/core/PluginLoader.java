@@ -1,10 +1,3 @@
-/*
- * 蘑菇街 Inc.
- * Copyright (c) 2010-2014 All Rights Reserved.
- *
- * Author: wuya
- * Create Date: 2014年6月26日 下午4:35:16
- */
 package com.github.stuxuhai.hdata.core;
 
 import java.util.HashMap;
@@ -21,41 +14,41 @@ import com.google.common.base.Throwables;
 
 public class PluginLoader {
 
-	private static Map<String, String> readerMap;
-	private static Map<String, String> writerMap;
+    private static Map<String, String> readerMap;
+    private static Map<String, String> writerMap;
 
-	public static String getReaderClassName(String name) {
-		return readerMap.get(name);
-	}
+    public static String getReaderClassName(String name) {
+        return readerMap.get(name);
+    }
 
-	public static String getWriterClassName(String name) {
-		return writerMap.get(name);
-	}
+    public static String getWriterClassName(String name) {
+        return writerMap.get(name);
+    }
 
-	static {
-		readerMap = new HashMap<String, String>();
-		writerMap = new HashMap<String, String>();
+    static {
+        readerMap = new HashMap<String, String>();
+        writerMap = new HashMap<String, String>();
 
-		String path = Utils.getConfigDir() + Constants.PLUGINS_XML;
-		try {
-			XMLConfiguration config = new XMLConfiguration(path);
-			config.setValidating(true);
+        String path = Utils.getConfigDir() + Constants.PLUGINS_XML;
+        try {
+            XMLConfiguration config = new XMLConfiguration(path);
+            config.setValidating(true);
 
-			List<HierarchicalConfiguration> readerList = config.configurationsAt("readers.reader");
-			for (HierarchicalConfiguration hc : readerList) {
-				String name = hc.getString("name");
-				String clazz = hc.getString("class");
-				readerMap.put(name, clazz);
-			}
+            List<HierarchicalConfiguration> readerList = config.configurationsAt("readers.reader");
+            for (HierarchicalConfiguration hc : readerList) {
+                String name = hc.getString("name");
+                String clazz = hc.getString("class");
+                readerMap.put(name, clazz);
+            }
 
-			List<HierarchicalConfiguration> writerList = config.configurationsAt("writers.writer");
-			for (HierarchicalConfiguration hc : writerList) {
-				String name = hc.getString("name");
-				String clazz = hc.getString("class");
-				writerMap.put(name, clazz);
-			}
-		} catch (ConfigurationException e) {
-			Throwables.propagate(e);
-		}
-	}
+            List<HierarchicalConfiguration> writerList = config.configurationsAt("writers.writer");
+            for (HierarchicalConfiguration hc : writerList) {
+                String name = hc.getString("name");
+                String clazz = hc.getString("class");
+                writerMap.put(name, clazz);
+            }
+        } catch (ConfigurationException e) {
+            Throwables.propagate(e);
+        }
+    }
 }

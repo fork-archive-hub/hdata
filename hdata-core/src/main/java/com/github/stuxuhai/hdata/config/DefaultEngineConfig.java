@@ -1,10 +1,3 @@
-/*
- * 蘑菇街 Inc.
- * Copyright (c) 2010-2014 All Rights Reserved.
- *
- * Author: wuya
- * Create Date: 2014年6月26日 下午4:35:16
- */
 package com.github.stuxuhai.hdata.config;
 
 import java.util.List;
@@ -20,31 +13,31 @@ import com.google.common.base.Throwables;
 
 public class DefaultEngineConfig extends EngineConfig {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private DefaultEngineConfig() {
-		super();
-	}
+    private DefaultEngineConfig() {
+        super();
+    }
 
-	public static DefaultEngineConfig create() {
-		DefaultEngineConfig conf = new DefaultEngineConfig();
-		String path = Utils.getConfigDir() + Constants.HDATA_XML;
+    public static DefaultEngineConfig create() {
+        DefaultEngineConfig conf = new DefaultEngineConfig();
+        String path = Utils.getConfigDir() + Constants.HDATA_XML;
 
-		try {
-			XMLConfiguration config = new XMLConfiguration(path);
-			config.setValidating(true);
+        try {
+            XMLConfiguration config = new XMLConfiguration(path);
+            config.setValidating(true);
 
-			List<HierarchicalConfiguration> properties = config.configurationsAt(".property");
-			for (HierarchicalConfiguration hc : properties) {
-				String name = hc.getString("name");
-				String value = hc.getString("value");
-				conf.setProperty(name, value);
-			}
-		} catch (ConfigurationException e) {
-			Throwables.propagate(e);
-		}
+            List<HierarchicalConfiguration> properties = config.configurationsAt(".property");
+            for (HierarchicalConfiguration hc : properties) {
+                String name = hc.getString("name");
+                String value = hc.getString("value");
+                conf.setProperty(name, value);
+            }
+        } catch (ConfigurationException e) {
+            Throwables.propagate(e);
+        }
 
-		return conf;
-	}
+        return conf;
+    }
 
 }

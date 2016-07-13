@@ -1,10 +1,3 @@
-/*
- * 蘑菇街 Inc.
- * Copyright (c) 2010-2014 All Rights Reserved.
- *
- * Author: wuya
- * Create Date: 2014年7月2日 下午3:48:21
- */
 package com.github.stuxuhai.hdata.core;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,10 +8,6 @@ import com.google.common.base.Throwables;
 import com.lmax.disruptor.ExceptionHandler;
 import com.lmax.disruptor.dsl.Disruptor;
 
-/**
- * @author wuya
- *
- */
 public class RecordEventExceptionHandler implements ExceptionHandler<Object> {
 
     private final Disruptor<RecordEvent> disruptor;

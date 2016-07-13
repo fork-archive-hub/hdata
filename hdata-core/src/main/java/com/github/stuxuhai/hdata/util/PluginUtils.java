@@ -1,11 +1,3 @@
-/*
- * 蘑菇街 Inc.
- * Copyright (c) 2010-2016 All Rights Reserved.
- *
- * Author: wuya
- * Create Date: 2016年4月9日 上午11:39:24
- */
-
 package com.github.stuxuhai.hdata.util;
 
 import java.io.File;
@@ -26,42 +18,41 @@ import com.google.common.collect.Maps;
 
 public class PluginUtils {
 
-	private static Map<String, PluginClassLoader> cache = Maps.newConcurrentMap();
-	private static final Logger LOGGER = LogManager.getLogger();
+    private static Map<String, PluginClassLoader> cache = Maps.newConcurrentMap();
+    private static final Logger LOGGER = LogManager.getLogger();
 
-	private static List<URL> listFileByPluginName(String pluginName) throws MalformedURLException {
-		List<URL> result = Lists.newArrayList();
-		File file = new File(PluginUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath()
-				.replaceAll("/lib/.*\\.jar", "") + "/plugins/" + pluginName);
-		if (!file.exists()) {
-			throw new HDataException("Plugin not found: " + pluginName);
-		}
+    private static List<URL> listFileByPluginName(String pluginName) throws MalformedURLException {
+        List<URL> result = Lists.newArrayList();
+        File file = new File(PluginUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/lib/.*\\.jar", "")
+                + "/plugins/" + pluginName);
+        if (!file.exists()) {
+            throw new HDataException("Plugin not found: " + pluginName);
+        }
 
-		File[] jars = file.listFiles();
-		for (File jar : jars) {
-			result.add(jar.toURI().toURL());
-		}
-		return result;
-	}
+        File[] jars = file.listFiles();
+        for (File jar : jars) {
+            result.add(jar.toURI().toURL());
+        }
+        return result;
+    }
 
-	public static Class<?> loadClass(String pluginName, String className)
-			throws ClassNotFoundException, MalformedURLException {
-		List<URL> list = listFileByPluginName(pluginName);
-		PluginClassLoader classLoader = cache.get(pluginName);
-		if (classLoader == null) {
-			classLoader = new PluginClassLoader(list.toArray(new URL[list.size()]), null);
-			cache.put(pluginName, classLoader);
-		}
-		return classLoader.loadClass(className);
-	}
+    public static Class<?> loadClass(String pluginName, String className) throws ClassNotFoundException, MalformedURLException {
+        List<URL> list = listFileByPluginName(pluginName);
+        PluginClassLoader classLoader = cache.get(pluginName);
+        if (classLoader == null) {
+            classLoader = new PluginClassLoader(list.toArray(new URL[list.size()]), null);
+            cache.put(pluginName, classLoader);
+        }
+        return classLoader.loadClass(className);
+    }
 
-	public static void closeURLClassLoader() {
-		for (Entry<String, PluginClassLoader> entry : cache.entrySet()) {
-			try {
-				entry.getValue().close();
-			} catch (IOException e) {
-				LOGGER.error("", e);
-			}
-		}
-	}
+    public static void closeURLClassLoader() {
+        for (Entry<String, PluginClassLoader> entry : cache.entrySet()) {
+            try {
+                entry.getValue().close();
+            } catch (IOException e) {
+                LOGGER.error("", e);
+            }
+        }
+    }
 }
