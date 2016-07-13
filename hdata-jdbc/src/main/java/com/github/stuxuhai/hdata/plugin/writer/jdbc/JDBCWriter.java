@@ -40,6 +40,8 @@ public class JDBCWriter extends Writer {
 
     @Override
     public void prepare(JobContext context, PluginConfig writerConfig) {
+        String keywordEscaper = writerConfig.getProperty(JDBCWriterProperties.KEYWORD_ESCAPER, "`");
+        keywordEscaper = writerConfig.getProperty(JDBCWriterProperties.KEYWORD_ESCAPER, "`");
         columns = context.getFields();
         String driver = writerConfig.getString(JDBCWriterProperties.DRIVER);
         Preconditions.checkNotNull(driver, "JDBC writer required property: driver");
@@ -66,21 +68,23 @@ public class JDBCWriter extends Writer {
         try {
             connection = JdbcUtils.getConnection(driver, url, username, password);
             connection.setAutoCommit(false);
-            columnTypes = JdbcUtils.getColumnTypes(connection, table);
+            columnTypes = JdbcUtils.getColumnTypes(connection, table, keywordEscaper);
 
             String sql = null;
             if (this.schema != null) {
                 String[] placeholder = new String[this.schema.length];
                 Arrays.fill(placeholder, "?");
                 sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
-                        new Object[] { table, "`" + Joiner.on("`, `").join(this.schema) + "`", Joiner.on(", ").join(placeholder) });
+                        new Object[] { table, keywordEscaper + Joiner.on(keywordEscaper + ", " + keywordEscaper).join(this.schema) + keywordEscaper,
+                                Joiner.on(", ").join(placeholder) });
                 LOG.debug(sql);
                 this.statement = this.connection.prepareStatement(sql);
             } else if (this.columns != null) {
                 String[] placeholder = new String[this.columns.size()];
                 Arrays.fill(placeholder, "?");
                 sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
-                        new Object[] { table, "`" + Joiner.on("`, `").join(this.columns) + "`", Joiner.on(", ").join(placeholder) });
+                        new Object[] { table, keywordEscaper + Joiner.on(keywordEscaper + ", " + keywordEscaper).join(this.columns) + keywordEscaper,
+                                Joiner.on(", ").join(placeholder) });
                 LOG.debug(sql);
                 this.statement = this.connection.prepareStatement(sql);
             }

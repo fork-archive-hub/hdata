@@ -26,14 +26,14 @@ public class JdbcUtils {
      * @return
      * @throws SQLException
      */
-    public static Map<String, Integer> getColumnTypes(Connection connection, String table) throws SQLException {
+    public static Map<String, Integer> getColumnTypes(Connection connection, String table, String keywordEscaper) throws SQLException {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM ");
-        sql.append("`");
+        sql.append(keywordEscaper);
         sql.append(table);
-        sql.append("`");
+        sql.append(keywordEscaper);
         sql.append(" WHERE 1=2");
-        sql.append(" limit 1");
+        sql.append(" Limit 1");
 
         ResultSetHandler<Map<String, Integer>> handler = new ResultSetHandler<Map<String, Integer>>() {
             @Override
@@ -59,14 +59,14 @@ public class JdbcUtils {
      * @return
      * @throws SQLException
      */
-    public static List<String> getColumnNames(Connection conn, String table) throws SQLException {
+    public static List<String> getColumnNames(Connection conn, String table, String keywordEscaper) throws SQLException {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM ");
-        sql.append("`");
+        sql.append(keywordEscaper);
         sql.append(table);
-        sql.append("`");
+        sql.append(keywordEscaper);
         sql.append(" WHERE 1=2");
-        sql.append(" limit 1");
+        sql.append(" Limit 1");
 
         ResultSetHandler<List<String>> handler = new ResultSetHandler<List<String>>() {
 
@@ -140,7 +140,8 @@ public class JdbcUtils {
      * @return
      * @throws SQLException
      */
-    public static String getDigitalPrimaryKey(Connection conn, String catalog, String schema, String table) throws SQLException {
+    public static String getDigitalPrimaryKey(Connection conn, String catalog, String schema, String table, String keywordEscaper)
+            throws SQLException {
         List<String> primaryKeys = new ArrayList<String>();
         ResultSet rs = conn.getMetaData().getPrimaryKeys(catalog, schema, table);
         while (rs.next()) {
@@ -149,7 +150,7 @@ public class JdbcUtils {
         rs.close();
 
         if (primaryKeys.size() > 0) {
-            Map<String, Integer> map = getColumnTypes(conn, table);
+            Map<String, Integer> map = getColumnTypes(conn, table, keywordEscaper);
             for (String pk : primaryKeys) {
                 if (isDigitalType(map.get(pk.toLowerCase()))) {
                     return pk;
