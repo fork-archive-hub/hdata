@@ -18,13 +18,10 @@ if not exist %JAVA% (
 )
 
 set HDATA_CLASSPATH=.;%HDATA_LIB_DIR%\*
-::for /f %%i in ('dir /b /a-d %HDATA_LIB_DIR%\*.jar') do (
-:: set HDATA_CLASSPATH=!HDATA_CLASSPATH!;.\lib\%%i
+::add plugins to class_path
+::for /f %%i in ('dir /b /ad %HDATA_PLUGINS_DIR%') do (
+::set HDATA_CLASSPATH=!HDATA_CLASSPATH!;!HDATA_PLUGINS_DIR!\%%i\*
 ::)
-::将plugins添加到class_path目录
-for /f %%i in ('dir /b /ad %HDATA_PLUGINS_DIR%') do (
-set HDATA_CLASSPATH=!HDATA_CLASSPATH!;!HDATA_PLUGINS_DIR!\%%i\*
-)
 echo %HDATA_CLASSPATH% 
 
 set JAVA_OPTS=%JAVA_OPTS% -Xss256k
@@ -39,15 +36,13 @@ set JAVA_OPTS=%JAVA_OPTS% -XX:+UseCMSInitiatingOccupancyOnly
 set JAVA_OPTS=%JAVA_OPTS% -XX:+HeapDumpOnOutOfMemoryError
 set JAVA_OPTS=%JAVA_OPTS% -XX:SoftRefLRUPolicyMSPerMB=0
 
-set JAVA_OPTS=%JAVA_OPTS% -Dhdata.conf.dir=%HDATA_CONF_DIR%
-set JAVA_OPTS="%JAVA_OPTS% -Dlog4j.configurationFile=file:///%HDATA_CONF_DIR%\log4j2.xml"
+set JAVA_OPTS=%JAVA_OPTS% -Dhdata.conf.dir="%HDATA_CONF_DIR%"
+set JAVA_OPTS=%JAVA_OPTS% -Dlog4j.configurationFile=file:///%HDATA_CONF_DIR%\log4j2.xml
 
 set MAIN_CLASS="com.github.stuxuhai.hdata.CliDriver"
 
-::echo %JAVA% %JAVA_OPTS% -classpath "%HDATA_CLASSPATH%" %MAIN_CLASS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-::%JAVA% %JAVA_OPTS% -classpath "%HDATA_CLASSPATH%" %MAIN_CLASS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-%JAVA% "-Dlog4j.configurationFile=file:///%HDATA_CONF_DIR%\log4j2.xml"" ^
--classpath "%HDATA_CLASSPATH%" %MAIN_CLASS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+echo %JAVA% %JAVA_OPTS% -classpath "%HDATA_CLASSPATH%" %MAIN_CLASS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVA% %JAVA_OPTS% -classpath "%HDATA_CLASSPATH%" %MAIN_CLASS% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 goto :EOF
 
