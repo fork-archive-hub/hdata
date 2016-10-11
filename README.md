@@ -334,7 +334,7 @@ Reader     | 并行度切分依据   |
 -----------| ----- |
 jdbc|数值型主键（或配置指定列）的大小范围。默认会根据查询条件查找max(id)和min(id)，然后根据id的区间范围均分，每个线程负责读取其中一份区间的数据|
 hive|文件数量|
-hbase|rowkey区间|
+hbase|region数量|
 hdfs|文件数量|
 mongodb|_id区间|
 ftp|文件数量|
