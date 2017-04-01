@@ -154,9 +154,9 @@ public class HDFSWriter extends Writer {
 			Path hdfsPath = createFilePath(fileNum++);
 			conf = new Configuration();
 			if (writerConfig.containsKey(HDFSWriterProperties.HDFS_CONF_PATH)) {
-        for (String path: writerConfig.getString(HDFSWriterProperties.HDFS_CONF_PATH).split(",")) {
-          conf.addResource(new Path("file://" + path));
-        }
+				for (String path: writerConfig.getString(HDFSWriterProperties.HDFS_CONF_PATH).split(",")) {
+					conf.addResource(new Path("file://" + path));
+				}
 			}
 
 			try {

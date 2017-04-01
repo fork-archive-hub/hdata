@@ -61,9 +61,9 @@ public class HDFSReader extends Reader {
 	public void execute(RecordCollector recordCollector) {
 		Configuration conf = new Configuration();
 		if (readerConfig.containsKey(HDFSReaderProperties.HDFS_CONF_PATH)) {
-      for (String path: readerConfig.getString(HDFSReaderProperties.HDFS_CONF_PATH).split(",")) {
-        conf.addResource(new Path("file://" + path));
-      }
+			for (String path: readerConfig.getString(HDFSReaderProperties.HDFS_CONF_PATH).split(",")) {
+				conf.addResource(new Path("file://" + path));
+			}
 		}
 
 		CompressionCodecFactory codecFactory = new CompressionCodecFactory(conf);
