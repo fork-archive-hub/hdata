@@ -18,7 +18,7 @@ import com.github.stuxuhai.hdata.api.PluginConfig;
 import com.github.stuxuhai.hdata.api.Splitter;
 import com.github.stuxuhai.hdata.common.Constants;
 import com.github.stuxuhai.hdata.exception.HDataException;
-import com.github.stuxuhai.hdata.util.JdbcUtils;
+import com.github.stuxuhai.hdata.plugin.jdbc.JdbcUtils;
 import com.github.stuxuhai.hdata.util.NumberUtils;
 import com.github.stuxuhai.hdata.util.Utils;
 import com.google.common.base.Joiner;
