@@ -40,7 +40,7 @@ public class PluginUtils {
         List<URL> list = listFileByPluginName(pluginName);
         PluginClassLoader classLoader = cache.get(pluginName);
         if (classLoader == null) {
-            classLoader = new PluginClassLoader(list.toArray(new URL[list.size()]), null);
+            classLoader = new PluginClassLoader(list.toArray(new URL[list.size()]));
             cache.put(pluginName, classLoader);
         }
         return classLoader.loadClass(className);

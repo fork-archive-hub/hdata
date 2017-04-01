@@ -12,10 +12,12 @@
 		<dependency>
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>hdata-api</artifactId>
+      <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>hdata-core</artifactId>
+      <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
