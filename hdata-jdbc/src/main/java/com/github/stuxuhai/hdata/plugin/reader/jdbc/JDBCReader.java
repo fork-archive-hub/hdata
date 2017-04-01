@@ -23,7 +23,7 @@ import com.github.stuxuhai.hdata.api.RecordCollector;
 import com.github.stuxuhai.hdata.api.Splitter;
 import com.github.stuxuhai.hdata.common.HDataConfigConstants;
 import com.github.stuxuhai.hdata.exception.HDataException;
-import com.github.stuxuhai.hdata.util.JdbcUtils;
+import com.github.stuxuhai.hdata.plugin.jdbc.JdbcUtils;
 import com.google.common.base.Throwables;
 
 public class JDBCReader extends Reader {

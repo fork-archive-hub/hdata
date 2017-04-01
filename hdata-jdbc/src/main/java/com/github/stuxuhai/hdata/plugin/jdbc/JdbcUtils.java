@@ -1,4 +1,4 @@
-package com.github.stuxuhai.hdata.util;
+package com.github.stuxuhai.hdata.plugin.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

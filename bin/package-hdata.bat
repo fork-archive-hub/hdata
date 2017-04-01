@@ -28,7 +28,7 @@ copy "%HDATA_HOME%\readme.md" "%HDATA_BUILD_HDATA_DIR%"
 
 
 
-call mvn clean package dependency:copy-dependencies 
+call mvn clean package -Pcopy-dependency
 
 copy /y %HDATA_HOME%\hdata-core\target\hdata-core-*.jar %HDATA_BUILD_HDATA_DIR%\lib
 copy /y %HDATA_HOME%\hdata-core\target\dependency\*.jar %HDATA_BUILD_HDATA_DIR%\lib

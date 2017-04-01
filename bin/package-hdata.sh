@@ -31,7 +31,7 @@ mkdir -p $HDATA_BUILD_HDATA_DIR/plugins
 cp $HDATA_HOME/bin/hdata $HDATA_BUILD_HDATA_DIR/bin/
 cp -r $HDATA_HOME/conf $HDATA_BUILD_HDATA_DIR/
 
-mvn clean package dependency:copy-dependencies
+mvn clean package -Pcopy-dependency
 
 cp $HDATA_HOME/hdata-core/target/hdata-core-*.jar $HDATA_BUILD_HDATA_DIR/lib
 cp $HDATA_HOME/hdata-core/target/dependency/*.jar $HDATA_BUILD_HDATA_DIR/lib

@@ -5,18 +5,7 @@ import java.net.URLClassLoader;
 
 public class PluginClassLoader extends URLClassLoader {
 
-    public PluginClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
+    public PluginClassLoader(URL[] urls) {
+        super(urls, PluginClassLoader.class.getClassLoader());
     }
-
-    @Override
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (name.startsWith("com.github.stuxuhai.hdata.api.") || name.startsWith("org.apache.logging.") || name.startsWith("org.apache.log4j.")
-                || name.startsWith("org.slf4j.") || name.startsWith("org.apache.commons.logging.")) {
-            return getClass().getClassLoader().loadClass(name);
-        } else {
-            return super.loadClass(name);
-        }
-    }
-
 }

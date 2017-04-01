@@ -45,7 +45,9 @@ public class HDFSSplitter extends Splitter {
 
 		Configuration conf = new Configuration();
 		if (readerConfig.containsKey(HDFSReaderProperties.HDFS_CONF_PATH)) {
-			conf.addResource(new Path("file://" + readerConfig.getString(HDFSReaderProperties.HDFS_CONF_PATH)));
+			for (String path: readerConfig.getString(HDFSReaderProperties.HDFS_CONF_PATH).split(",")) {
+				conf.addResource(new Path("file://" + path));
+			}
 		}
 		try {
 			FileSystem fs = dir.getFileSystem(conf);

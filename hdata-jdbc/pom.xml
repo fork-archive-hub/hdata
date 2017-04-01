@@ -12,15 +12,22 @@
 		<dependency>
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>hdata-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>hdata-core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbutils</groupId>
+			<artifactId>commons-dbutils</artifactId>
+			<version>1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
