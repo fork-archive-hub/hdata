@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import com.github.stuxuhai.hdata.plugin.FormatConf;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -22,12 +23,16 @@ public class CSVReader extends Reader {
 	private String path = null;
 	private int startRow = 1;
 	private String encoding = null;
+	private String format;
+	private CSVFormat csvFormat = CSVFormat.DEFAULT;
 
 	@Override
 	public void prepare(JobContext context, PluginConfig readerConfig) {
 		path = readerConfig.getString(CSVReaderProperties.PATH);
 		startRow = readerConfig.getInt(CSVReaderProperties.START_ROW, 1);
 		encoding = readerConfig.getString(CSVReaderProperties.ENCODING, "UTF-8");
+		format = readerConfig.getString(CSVReaderProperties.FORMAT);
+		FormatConf.confCsvFormat(format,csvFormat);
 	}
 
 	@Override
@@ -35,7 +40,7 @@ public class CSVReader extends Reader {
 		long currentRow = 0;
 		try {
 			java.io.Reader in = new InputStreamReader(new FileInputStream(path), encoding);
-			Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
+			Iterable<CSVRecord> records = csvFormat.parse(in);
 			for (CSVRecord csvRecord : records) {
 				currentRow++;
 				if (currentRow >= startRow) {
