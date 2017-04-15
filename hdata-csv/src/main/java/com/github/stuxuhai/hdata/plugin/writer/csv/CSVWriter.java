@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.stuxuhai.hdata.plugin.FormatConf;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -41,6 +42,8 @@ public class CSVWriter extends Writer {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Pattern REG_FILE_PATH_WITHOUT_EXTENSION = Pattern.compile(".*?(?=\\.\\w+$)");
     private static final Pattern REG_FILE_EXTENSION = Pattern.compile("(\\.\\w+)$");
+    private String format;
+    private CSVFormat csvFormat = CSVFormat.DEFAULT;
 
     @Override
     public void prepare(JobContext context, PluginConfig writerConfig) {
@@ -49,6 +52,9 @@ public class CSVWriter extends Writer {
 
         encoding = writerConfig.getString(CSVWriterProperties.ENCODING, "UTF-8");
         separator = StringEscapeUtils.unescapeJava(writerConfig.getString(CSVWriterProperties.SEPARATOR, ","));
+
+        format = writerConfig.getString(CSVWriterProperties.FORMAT);
+        FormatConf.confCsvFormat(format,csvFormat);
 
         fields = context.getFields();
         showColumns = writerConfig.getBoolean(CSVWriterProperties.SHOW_COLUMNS, false);
@@ -85,7 +91,7 @@ public class CSVWriter extends Writer {
     public void execute(Record record) {
         if (csvPrinter == null) {
             try {
-                csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter(separator.charAt(0)));
+                csvPrinter = new CSVPrinter(writer, csvFormat.withDelimiter(separator.charAt(0)));
                 if (showTypesAndComments) {
                     for (String type : types) {
                         csvList.add(type);
