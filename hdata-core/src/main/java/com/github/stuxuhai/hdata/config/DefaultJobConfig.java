@@ -1,21 +1,17 @@
 package com.github.stuxuhai.hdata.config;
 
-import java.util.Iterator;
-
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.SubnodeConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-
-import com.github.stuxuhai.hdata.api.JobConfig;
-import com.github.stuxuhai.hdata.api.PluginConfig;
-import com.github.stuxuhai.hdata.api.Reader;
-import com.github.stuxuhai.hdata.api.Splitter;
-import com.github.stuxuhai.hdata.api.Writer;
+import com.github.stuxuhai.hdata.api.*;
 import com.github.stuxuhai.hdata.core.PluginLoader;
 import com.github.stuxuhai.hdata.exception.HDataException;
 import com.github.stuxuhai.hdata.util.PluginUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.SubnodeConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Iterator;
 
 public class DefaultJobConfig extends JobConfig {
 
@@ -95,7 +91,7 @@ public class DefaultJobConfig extends JobConfig {
             while (readerIt.hasNext()) {
                 String key = readerIt.next();
                 if (!key.startsWith("[@")) {
-                    readerPluginConfig.setProperty(key.replace("..", "."), readerSc.getString(key));
+                    readerPluginConfig.setProperty(key.replace("..", "."), StringUtils.join(readerSc.getList(key), ","));
                 }
             }
 
