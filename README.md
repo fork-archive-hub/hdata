@@ -188,6 +188,8 @@ start.offset|否|需要消费的起始offset|
 fields.separator|否|字段分隔符，默认\t|
 schema|否|输出的字段定义，如：id,start_ip,end_ip|
 
+其他配置请参考：[Kafka Configuration](https://kafka.apache.org/documentation/#configuration)
+
 * ftp
 
 参数        | 是否必选   | 描述                    |
@@ -285,6 +287,8 @@ zookeeper.znode.parent|否|hbase使用的Zookeeper根节点|
 -----------| ----- | ---------------------------------------- |
 topic|是|需要消费的topic|
 fields.separator|否|字段分隔符，默认\t|
+
+其他配置请参考：[Kafka Configuration](https://kafka.apache.org/documentation/#configuration)
 
 * ftp
 

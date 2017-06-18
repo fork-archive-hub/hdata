@@ -79,11 +79,11 @@
 		</writer>
 		<writer>
 			<name>csv</name>
-			<class>com.github.stuxuhai.hdata.plugin.reader.csv.CSVWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.csv.CSVWriter</class>
 		</writer>
 		<writer>
 			<name>kafka</name>
-			<class>com.github.stuxuhai.hdata.plugin.reader.kafka.KafkaWriter</class>
+			<class>com.github.stuxuhai.hdata.plugin.writer.kafka.KafkaWriter</class>
 		</writer>
 		<writer>
 			<name>excel</name>

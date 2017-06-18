@@ -8,6 +8,10 @@ import org.apache.commons.csv.CSVFormat;
 final public class FormatConf {
 
     public static void confCsvFormat(String format,CSVFormat csvFormat){
+        if (format == null) {
+            csvFormat = CSVFormat.DEFAULT;
+            return;
+        }
         switch (format){
             case "excel":
                 csvFormat = CSVFormat.EXCEL;
@@ -25,6 +29,5 @@ final public class FormatConf {
                 csvFormat = CSVFormat.DEFAULT;
                 break;
         }
-
     }
 }
