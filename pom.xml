@@ -11,6 +11,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<zookeeper.version>3.4.6</zookeeper.version>
+		<hadoop.version>2.7.1</hadoop.version>
+		<hbase.version>1.1.2</hbase.version>
+		<hive.version>1.2.1</hive.version>
+		<zookeeper.scope>compile</zookeeper.scope>
+		<hadoop.scope>compile</hadoop.scope>
+		<hbase.scope>compile</hbase.scope>
+		<hive.scope>compile</hive.scope>
 	</properties>
 
 	<dependencyManagement>
@@ -29,6 +37,30 @@
 	</dependencyManagement>
 
 	<profiles>
+		<profile>
+			<id>cdh5</id>
+			<properties>
+				<cdh.version>cdh5.7.4</cdh.version>
+				<zookeeper.version>3.4.5-${cdh.version}</zookeeper.version>
+				<hadoop.version>2.6.0-${cdh.version}</hadoop.version>
+				<hbase.version>1.2.0-${cdh.version}</hbase.version>
+				<hive.version>1.1.0-${cdh.version}</hive.version>
+				<zookeeper.scope>provided</zookeeper.scope>
+				<hadoop.scope>provided</hadoop.scope>
+				<hbase.scope>provided</hbase.scope>
+				<hive.scope>provided</hive.scope>
+			</properties>
+			<repositories>
+				<repository>
+					<id>cdh.repo</id>
+					<url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+					<name>Cloudera Repositories</name>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
 		<profile>
 			<id>copy-dependency</id>
 			<build>
