@@ -45,7 +45,10 @@ HData框架通过配置读取解析、RingBugffer 缓冲区、线程池封装等
 
 * 编译
 
-执行 *./bin/package-hdata.sh* 命令，执行成功后将会生成压缩包 *./build/hdata.tar.gz* ，然后解压即可。
+执行 mvn clean package -Pmake-package 命令，执行成功后将会生成压缩包 ./build/hdata.tar.gz ，然后解压即可。
+
+编译时也可以夹带自己的配置, 如：mvn clean package -Pcdh5 -Pmake-package
+
 
 * 运行
 
