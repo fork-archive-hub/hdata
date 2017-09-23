@@ -30,7 +30,12 @@ if [ ! -x "$JAVA" ]; then
     exit 1
 fi
 
-HDATA_CLASSPATH='.'
+if [ -z "$HDATA_CLASSPATH" ]; then
+    HDATA_CLASSPATH='.'
+else
+    HDATA_CLASSPATH=".:$HDATA_CLASSPATH"
+fi
+
 for f in $HDATA_LIB_DIR/*.jar; do
     HDATA_CLASSPATH=${HDATA_CLASSPATH}:$f;
 done

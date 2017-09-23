@@ -1,0 +1,78 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>package</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<fileSets>
+		<!-- bin -->
+		<fileSet>
+			<directory>${topdir}/bin</directory>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>hdata</include>
+			</includes>
+		</fileSet>
+		<!-- conf -->
+		<fileSet>
+			<directory>${topdir}/conf</directory>
+			<outputDirectory>conf</outputDirectory>
+		</fileSet>
+		<!-- lib -->
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-api</directory>
+			<outputDirectory>lib</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-core</directory>
+			<outputDirectory>lib</outputDirectory>
+		</fileSet>
+		<!-- plugins -->
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-console</directory>
+			<outputDirectory>plugins/console</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-csv</directory>
+			<outputDirectory>plugins/csv</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-excel</directory>
+			<outputDirectory>plugins/excel</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-ftp</directory>
+			<outputDirectory>plugins/ftp</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-hbase</directory>
+			<outputDirectory>plugins/hbase</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-hdfs</directory>
+			<outputDirectory>plugins/hdfs</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-hive</directory>
+			<outputDirectory>plugins/hive</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-http</directory>
+			<outputDirectory>plugins/http</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-jdbc</directory>
+			<outputDirectory>plugins/jdbc</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-kafka</directory>
+			<outputDirectory>plugins/kafka</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-mongodb</directory>
+			<outputDirectory>plugins/mongodb</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

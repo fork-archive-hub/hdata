@@ -9,8 +9,6 @@
 	<artifactId>hdata-hive</artifactId>
 
 	<properties>
-		<hive.version>1.2.1</hive.version>
-		<hadoop.version>2.6.0</hadoop.version>
 	</properties>
 
 	<dependencies>
@@ -34,6 +32,7 @@
 			<groupId>org.apache.hive.hcatalog</groupId>
 			<artifactId>hive-hcatalog-core</artifactId>
 			<version>${hive.version}</version>
+			<scope>${hive.scope}</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -45,6 +44,7 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-core</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>${hadoop.scope}</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -56,6 +56,7 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>${hadoop.scope}</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -67,6 +68,7 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-hdfs</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>${hadoop.scope}</scope>
 		</dependency>
 	</dependencies>
 </project>
