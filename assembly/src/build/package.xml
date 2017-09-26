@@ -11,9 +11,6 @@
 		<fileSet>
 			<directory>${topdir}/bin</directory>
 			<outputDirectory>bin</outputDirectory>
-			<includes>
-				<include>hdata</include>
-			</includes>
 		</fileSet>
 		<!-- conf -->
 		<fileSet>
