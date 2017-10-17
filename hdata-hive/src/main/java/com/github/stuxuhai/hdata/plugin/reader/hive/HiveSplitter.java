@@ -39,9 +39,13 @@ public class HiveSplitter extends Splitter {
 
 	@Override
 	public List<PluginConfig> split(JobConfig jobConfig) {
-		List<PluginConfig> list = new ArrayList<PluginConfig>();
+		List<PluginConfig> list = new ArrayList<>();
 		PluginConfig readerConfig = jobConfig.getReaderConfig();
 		String metastoreUris = readerConfig.getString(HiveReaderProperties.METASTORE_URIS);
+		if (metastoreUris == null || metastoreUris.isEmpty()) {
+			HiveConf hiveConf = new HiveConf();
+			metastoreUris = hiveConf.getVar(ConfVars.METASTOREURIS);
+		}
 		Preconditions.checkNotNull(metastoreUris, "Hive reader required property: metastore.uris");
 
 		String hadoopUser = readerConfig.getString(HiveReaderProperties.HADOOP_USER);

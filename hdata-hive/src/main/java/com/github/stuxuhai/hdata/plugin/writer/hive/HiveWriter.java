@@ -33,18 +33,24 @@ import com.github.stuxuhai.hdata.api.Writer;
 import com.github.stuxuhai.hdata.exception.HDataException;
 import com.github.stuxuhai.hdata.plugin.hive.HiveTypeUtils;
 import com.google.common.base.Preconditions;
+import org.apache.hadoop.hive.conf.HiveConf;
 
 public class HiveWriter extends Writer {
+
+	private static final AtomicInteger sequence = new AtomicInteger(0);
 
 	private TaskAttemptContext taskAttemptContext;
 	private RecordWriter<WritableComparable<?>, HCatRecord> writer;
 	private OutputCommitter committer;
-	private static AtomicInteger sequence = new AtomicInteger(0);
-	private List<String> columns = new ArrayList<String>();
+	private final List<String> columns = new ArrayList<>();
 
 	@Override
 	public void prepare(JobContext context, PluginConfig writerConfig) {
 		String metastoreUris = writerConfig.getString(HiveWriterProperties.METASTORE_URIS);
+		if (metastoreUris == null || metastoreUris.isEmpty()) {
+			HiveConf hiveConf = new HiveConf();
+			metastoreUris = hiveConf.getVar(ConfVars.METASTOREURIS);
+		}
 		Preconditions.checkNotNull(metastoreUris, "Hive writer requires property: metastore.uris");
 
 		String hiveDatabase = writerConfig.getString(HiveWriterProperties.DATABASE, "default");
@@ -55,19 +61,20 @@ public class HiveWriter extends Writer {
 			System.setProperty("HADOOP_USER_NAME", writerConfig.getString(HiveWriterProperties.HADOOP_USER));
 		}
 
-		Map<String, String> config = new HashMap<String, String>();
+		Map<String, String> config = new HashMap<>();
 		config.put(ConfVars.METASTOREURIS.varname, metastoreUris);
 		config.put("hive.start.cleanup.scratchdir", "true");
 
-		WriteEntity.Builder builder = new WriteEntity.Builder();
-		WriteEntity entity;
+		WriteEntity.Builder builder = new WriteEntity.Builder()
+						.withDatabase(hiveDatabase)
+						.withTable(hiveTable);
 
 		if (writerConfig.containsKey(HiveWriterProperties.PARTITIONS)
-				|| System.getProperty(HiveWriterProperties.PARTITIONS) != null) {
-			Map<String, String> partition = new HashMap<String, String>();
+						|| System.getProperty(HiveWriterProperties.PARTITIONS) != null) {
+			Map<String, String> partition = new HashMap<>();
 			String partitions = writerConfig.getString(HiveWriterProperties.PARTITIONS) != null
-					? writerConfig.getString(HiveWriterProperties.PARTITIONS)
-					: System.getProperty(HiveWriterProperties.PARTITIONS);
+							? writerConfig.getString(HiveWriterProperties.PARTITIONS)
+							: System.getProperty(HiveWriterProperties.PARTITIONS);
 			// String[] partkvs =
 			// writerConfig.getString(HiveWriterProperties.PARTITIONS).split(Constants.COLUMNS_SPLIT_REGEX);
 			String[] partkvs = partitions.split("\\s*,\\s*");
@@ -76,9 +83,7 @@ public class HiveWriter extends Writer {
 				partition.put(tokens[0], tokens[1]);
 			}
 
-			entity = builder.withDatabase(hiveDatabase).withTable(hiveTable).withPartition(partition).build();
-		} else {
-			entity = builder.withDatabase(hiveDatabase).withTable(hiveTable).build();
+			builder.withPartition(partition);
 		}
 
 		Configuration conf = new Configuration();
@@ -94,8 +99,9 @@ public class HiveWriter extends Writer {
 			conf.set(entry.getKey(), entry.getValue());
 		}
 
+		WriteEntity entity = builder.build();
 		OutputJobInfo jobInfo = OutputJobInfo.create(entity.getDbName(), entity.getTableName(),
-				entity.getPartitionKVs());
+						entity.getPartitionKVs());
 		try {
 			Job job = Job.getInstance(conf);
 			HCatOutputFormat.setOutput(job, jobInfo);
