@@ -133,6 +133,7 @@ keyword.escaper|否|关键字转义字符，默认为\`|
 
 参数        | 是否必选   | 描述                    |
 -----------| ----- | ---------------------------------------- |
+metastore.uris|否|Hive Metastore连接地址，如：thrift://localhost:9083, 默认: HiveConf.getVar(ConfVars.METASTOREURIS) 即 `hive-site.xml` 中的 `hive.metastore.uris` |
 database|否|数据库名，默认：default|
 table|是|表名|
 partitions|否|分区，例如: visit_date='2016-07-07'|
@@ -250,6 +251,7 @@ keyword.escaper|否|关键字转义字符，默认为\`|
 
 参数        | 是否必选   | 描述                    |
 -----------| ----- | ---------------------------------------- |
+metastore.uris|否|Hive Metastore连接地址，如：thrift://localhost:9083, 默认: HiveConf.getVar(ConfVars.METASTOREURIS) 即 `hive-site.xml` 中的 `hive.metastore.uris` |
 database|否|数据库名，默认：default|
 table|是|表名|
 partitions|否|分区条件，如：day='20140418'|
