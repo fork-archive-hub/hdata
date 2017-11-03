@@ -1,5 +1,6 @@
 package com.github.stuxuhai.hdata;
 
+import com.github.stuxuhai.hdata.api.JobConfig;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -115,7 +116,7 @@ public class CliDriver {
                 ctx.updateLoggers(conf);
             }
 
-            final DefaultJobConfig jobConfig;
+            final JobConfig jobConfig;
             if (cmd.hasOption(XML_FILE_OPTION)) {
                 String jobXmlPath = cmd.getOptionValue(XML_FILE_OPTION);
                 jobConfig = DefaultJobConfig.createFromXML(jobXmlPath);

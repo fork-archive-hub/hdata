@@ -14,18 +14,21 @@ import java.util.concurrent.Future;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.stuxuhai.hdata.api.EngineConfig;
+import com.github.stuxuhai.hdata.api.JobConfig;
 import com.github.stuxuhai.hdata.api.JobContext;
 import com.github.stuxuhai.hdata.api.JobStatus;
 import com.github.stuxuhai.hdata.api.Metric;
 import com.github.stuxuhai.hdata.api.OutputFieldsDeclarer;
 import com.github.stuxuhai.hdata.api.PluginConfig;
 import com.github.stuxuhai.hdata.api.Reader;
+import com.github.stuxuhai.hdata.api.RecordCollector;
 import com.github.stuxuhai.hdata.api.Splitter;
+import com.github.stuxuhai.hdata.api.Storage;
 import com.github.stuxuhai.hdata.api.Writer;
 import com.github.stuxuhai.hdata.common.Constants;
 import com.github.stuxuhai.hdata.common.HDataConfigConstants;
 import com.github.stuxuhai.hdata.config.DefaultEngineConfig;
-import com.github.stuxuhai.hdata.config.DefaultJobConfig;
 import com.github.stuxuhai.hdata.util.Utils;
 import com.google.common.base.Throwables;
 import com.lmax.disruptor.BlockingWaitStrategy;
@@ -39,7 +42,7 @@ public class HData {
     private static final DecimalFormat decimalFormat = new DecimalFormat("#0.00");
     private static final Logger LOGGER = LogManager.getLogger(HData.class);
 
-    public void start(final DefaultJobConfig jobConfig) {
+    public void start(final JobConfig jobConfig) {
         final PluginConfig readerConfig = jobConfig.getReaderConfig();
         final PluginConfig writerConfig = jobConfig.getWriterConfig();
 
@@ -56,7 +59,7 @@ public class HData {
         final OutputFieldsDeclarer outputFieldsDeclarer = new OutputFieldsDeclarer();
         context.setDeclarer(outputFieldsDeclarer);
 
-        final DefaultEngineConfig engineConfig = DefaultEngineConfig.create();
+        final EngineConfig engineConfig = DefaultEngineConfig.create();
         context.setEngineConfig(engineConfig);
 
         long sleepMillis = engineConfig.getLong(HDataConfigConstants.HDATA_SLEEP_MILLIS, Constants.DEFAULT_HDATA_SLEEP_MILLIS);
@@ -91,7 +94,7 @@ public class HData {
             if (readerConfig.getParallelism() > 1) {
                 LOGGER.warn("Can not find splitter, reader parallelism is set to 1.");
             }
-            readerConfigList = new ArrayList<PluginConfig>();
+            readerConfigList = new ArrayList<>();
             readerConfigList.add(readerConfig);
         }
 
@@ -117,14 +120,14 @@ public class HData {
         String WaitStrategyName = engineConfig.getString(HDataConfigConstants.HDATA_STORAGE_DISRUPTOR_WAIT_STRATEGY,
                 BlockingWaitStrategy.class.getName());
 
-        DefaultStorage storage = createStorage(bufferSize, WaitStrategyName, readers.length, handlers, context);
+        Storage storage = createStorage(bufferSize, WaitStrategyName, readers.length, handlers, context);
         context.setStorage(storage);
 
         LOGGER.info("Transfer data from reader to writer...");
 
-        DefaultRecordCollector rc = new DefaultRecordCollector(storage, metric, readerConfig.getFlowLimit());
+        RecordCollector rc = new DefaultRecordCollector(storage, metric, readerConfig.getFlowLimit());
         ExecutorService es = Executors.newFixedThreadPool(readers.length);
-        CompletionService<Integer> cs = new ExecutorCompletionService<Integer>(es);
+        CompletionService<Integer> cs = new ExecutorCompletionService<>(es);
         for (int i = 0, len = readerConfigList.size(); i < len; i++) {
             ReaderWorker readerWorker = new ReaderWorker(readers[i], context, readerConfigList.get(i), rc);
             cs.submit(readerWorker);
@@ -212,7 +215,7 @@ public class HData {
         System.exit(exitCode);
     }
 
-    private DefaultStorage createStorage(int bufferSize, String WaitStrategyName, int producerCount, RecordWorkHandler[] handlers,
+    private Storage createStorage(int bufferSize, String WaitStrategyName, int producerCount, RecordWorkHandler[] handlers,
             JobContext context) {
         WaitStrategy waitStrategy = WaitStrategyFactory.build(WaitStrategyName);
         ProducerType producerType;
@@ -221,9 +224,9 @@ public class HData {
         } else {
             producerType = ProducerType.MULTI;
         }
-        Disruptor<RecordEvent> disruptor = new Disruptor<RecordEvent>(RecordEvent.FACTORY, bufferSize, Executors.defaultThreadFactory(), producerType,
+        Disruptor<RecordEvent> disruptor = new Disruptor<>(RecordEvent.FACTORY, bufferSize, Executors.defaultThreadFactory(), producerType,
                 waitStrategy);
-        DefaultStorage storage = new DefaultStorage(disruptor, handlers, context);
+        Storage storage = new DefaultStorage(disruptor, handlers, context);
         return storage;
     }
 

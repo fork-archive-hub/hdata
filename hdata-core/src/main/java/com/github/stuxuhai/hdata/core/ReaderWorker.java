@@ -5,15 +5,16 @@ import java.util.concurrent.Callable;
 import com.github.stuxuhai.hdata.api.JobContext;
 import com.github.stuxuhai.hdata.api.PluginConfig;
 import com.github.stuxuhai.hdata.api.Reader;
+import com.github.stuxuhai.hdata.api.RecordCollector;
 
 public class ReaderWorker implements Callable<Integer> {
 
     private final Reader reader;
     private final JobContext context;
-    private final DefaultRecordCollector rc;
+    private final RecordCollector rc;
     private final PluginConfig readerConfig;
 
-    public ReaderWorker(Reader reader, JobContext context, PluginConfig readerConfig, DefaultRecordCollector rc) {
+    public ReaderWorker(Reader reader, JobContext context, PluginConfig readerConfig, RecordCollector rc) {
         this.reader = reader;
         this.context = context;
         this.rc = rc;
