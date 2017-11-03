@@ -71,5 +71,9 @@
 			<directory>${topdir}/target/all-modules/hdata-mongodb</directory>
 			<outputDirectory>plugins/mongodb</outputDirectory>
 		</fileSet>
+		<fileSet>
+			<directory>${topdir}/target/all-modules/hdata-wit</directory>
+			<outputDirectory>plugins/wit</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>
