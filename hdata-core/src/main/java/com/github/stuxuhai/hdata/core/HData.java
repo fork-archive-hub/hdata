@@ -38,9 +38,9 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 public class HData {
 
-    private int exitCode = 0;
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#0.00");
     private static final Logger LOGGER = LogManager.getLogger(HData.class);
+
+    private int exitCode = 0;
 
     public void start(final JobConfig jobConfig) {
         final PluginConfig readerConfig = jobConfig.getReaderConfig();
@@ -205,6 +205,7 @@ public class HData {
 
         double readSeconds = (metric.getReaderEndTime() - metric.getReaderStartTime()) / 1000d;
         double writeSeconds = (metric.getWriterEndTime() - metric.getWriterStartTime()) / 1000d;
+				final DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         String readSpeed = decimalFormat.format(metric.getReadCount().get() / readSeconds);
         String writeSpeed = decimalFormat.format(metric.getWriteCount().get() / writeSeconds);
         LOGGER.info("Read spent time: {}s, Write spent time: {}s", decimalFormat.format(readSeconds), decimalFormat.format(writeSeconds));
