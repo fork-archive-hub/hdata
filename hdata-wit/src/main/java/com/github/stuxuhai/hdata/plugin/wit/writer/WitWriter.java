@@ -8,11 +8,11 @@ import com.github.stuxuhai.hdata.api.Writer;
 import com.github.stuxuhai.hdata.core.PluginLoader;
 import com.github.stuxuhai.hdata.exception.HDataException;
 import com.github.stuxuhai.hdata.plugin.wit.WitEnginePlugin;
-import com.github.stuxuhai.hdata.plugin.wit.WitRecord;
 import com.github.stuxuhai.hdata.util.PluginUtils;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import org.febit.wit.Context;
 import org.febit.wit.Engine;
 import org.febit.wit.Template;
 import org.febit.wit.io.impl.DiscardOut;
@@ -21,7 +21,7 @@ import org.febit.wit.util.KeyValuesUtil;
 public class WitWriter extends Writer {
 
     public static final String KEY_INPUT = "input";
-    public static final String KEY_RESULT = "result";
+    public static final String KEY_RESULT = "__result";
 
     protected static final DiscardOut DISCARD_OUT = new DiscardOut();
 
@@ -40,15 +40,17 @@ public class WitWriter extends Writer {
 
     private Template template = null;
     private Writer innerWriter = null;
-    private final String[] templateParamNames = new String[]{KEY_INPUT, KEY_RESULT};
+    private final String[] templateParamNames = new String[]{KEY_INPUT};
 
     protected Template createTemplate(String tmpl) throws IOException {
-        return LazyHolder.ENGINE.getTemplate("code: var input,result; (()->{\n" + tmpl + "\n})();");
+        return LazyHolder.ENGINE.getTemplate("code: var " + KEY_INPUT + "; var " + KEY_RESULT + " = (()->{\n" + tmpl + "\n})();");
     }
 
-    protected WitRecord executeTemplate(Record input) {
-        WitRecord result = new WitRecord();
-        template.merge(KeyValuesUtil.wrap(templateParamNames, new Object[]{input, result}), DISCARD_OUT);
+    protected Object executeTemplate(Record input) {
+        Context context = template.merge(
+                KeyValuesUtil.wrap(templateParamNames, new Object[]{input}),
+                DISCARD_OUT);
+        Object result = context.get(KEY_RESULT);
         return result;
     }
 
@@ -88,8 +90,25 @@ public class WitWriter extends Writer {
 
     @Override
     public void execute(Record input) {
-        WitRecord result = executeTemplate(input);
-        this.innerWriter.execute(result);
+        Object result = executeTemplate(input);
+        write(result);
+    }
+
+    protected void write(Object result) {
+        if (result == null
+                || result == Context.VOID) {
+            // TODO filtered
+        } else if (result instanceof Record) {
+            this.innerWriter.execute((Record) result);
+        } else if (result instanceof Object[]) {
+            for (Object item : (Object[]) result) {
+                write(item);
+            }
+        } else if (result instanceof String) {
+            // TODO filtered with reason
+        } else {
+            throw new HDataException("Wit result type not support: " + result.getClass());
+        }
     }
 
     @Override

@@ -8,12 +8,20 @@ import java.util.List;
  *
  * @author zqq90
  */
-public class WitRecord implements Record {
+public class WitDynamicRecord implements Record {
 
     private final List<Object> datas;
 
-    public WitRecord() {
+    public WitDynamicRecord() {
         this.datas = new ArrayList<>();
+    }
+
+    public WitDynamicRecord(Record record) {
+        List<Object> list = new ArrayList<>();
+        for (int i = 0, len = record.size(); i < len; i++) {
+            list.add(record.get(i));
+        }
+        this.datas = list;
     }
 
     @Override
@@ -37,7 +45,6 @@ public class WitRecord implements Record {
     @Override
     public Object get(int index) {
         if (index >= this.datas.size()) {
-            // XXX: should throw IndexOutOfBoundsException ?
             return null;
         }
         return this.datas.get(index);
