@@ -9,6 +9,7 @@ import com.carrotsearch.sizeof.RamUsageEstimator;
 import com.github.stuxuhai.hdata.api.Metric;
 import com.github.stuxuhai.hdata.api.Record;
 import com.github.stuxuhai.hdata.api.RecordCollector;
+import com.github.stuxuhai.hdata.api.Storage;
 import com.github.stuxuhai.hdata.util.Utils;
 import com.google.common.base.Stopwatch;
 
@@ -18,12 +19,12 @@ public class DefaultRecordCollector implements RecordCollector {
 
     private static final long SLEEP_MILL_SECONDS = 1000;
 
-    private final DefaultStorage storage;
+    private final Storage storage;
     private final Metric metric;
     private final long flowLimit;
-    private Stopwatch stopwatch = Stopwatch.createStarted();
+    private final Stopwatch stopwatch = Stopwatch.createStarted();
 
-    public DefaultRecordCollector(DefaultStorage storage, Metric metric, long flowLimit) {
+    public DefaultRecordCollector(Storage storage, Metric metric, long flowLimit) {
         this.storage = storage;
         this.metric = metric;
         this.flowLimit = flowLimit;
