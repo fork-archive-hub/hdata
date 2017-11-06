@@ -89,5 +89,9 @@
 			<name>excel</name>
 			<class>com.github.stuxuhai.hdata.plugin.excel.writer.ExcelWriter</class>
 		</writer>
+		<writer>
+			<name>wit</name>
+			<class>com.github.stuxuhai.hdata.plugin.wit.writer.WitWriter</class>
+		</writer>
 	</writers>
 </plugins>

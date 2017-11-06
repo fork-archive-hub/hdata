@@ -1,0 +1,19 @@
+
+[engine]
+
+[logger :slf4jLogger]
+[nativeFactory :defaultNativeFactory]
+[resolverManager :defaultResolverManager]
+
+[codeStringLoader :stringLoader]
+codeFirst=true
+
+[routeLoader]
+loaders +='''
+  code: codeStringLoader
+'''
+
+[resolverManager]
+resolvers+='''
+  com.github.stuxuhai.hdata.plugin.wit.resolvers.RecordResolver
+'''
