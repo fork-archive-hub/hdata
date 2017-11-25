@@ -7,13 +7,14 @@ import org.febit.wit.InternalContext;
 import org.febit.wit.core.NativeFactory;
 import org.febit.wit.global.GlobalManager;
 import org.febit.wit.lang.MethodDeclare;
+import org.febit.wit.plugin.EnginePlugin;
 import org.febit.wit.util.JavaNativeUtil;
 
 /**
  *
  * @author zqq90
  */
-public class Methods implements WitEnginePlugin {
+public class Methods implements EnginePlugin {
 
     /**
      * A empty function, do nothing.
@@ -34,7 +35,7 @@ public class Methods implements WitEnginePlugin {
     }
 
     @Override
-    public void handle(Engine engine) {
+    public void apply(Engine engine) {
         NativeFactory nativeFactory = engine.getNativeFactory();
         GlobalManager manager = engine.getGlobalManager();
         JavaNativeUtil.addStaticMethods(manager, nativeFactory, Methods.class);
