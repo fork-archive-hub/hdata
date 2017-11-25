@@ -16,6 +16,7 @@
 		<hadoop.version>2.7.1</hadoop.version>
 		<hbase.version>1.1.2</hbase.version>
 		<hive.version>1.2.1</hive.version>
+		<wit.version>2.4.0-beta</wit.version>
 		<zookeeper.scope>compile</zookeeper.scope>
 		<hadoop.scope>compile</hadoop.scope>
 		<hbase.scope>compile</hbase.scope>
@@ -58,7 +59,7 @@
 			</properties>
 			<repositories>
 				<repository>
-					<id>cdh.repo</id>
+					<id>cloudera-repos</id>
 					<url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
 					<name>Cloudera Repositories</name>
 					<snapshots>

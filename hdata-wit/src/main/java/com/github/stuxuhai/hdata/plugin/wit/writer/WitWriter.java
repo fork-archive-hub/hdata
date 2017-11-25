@@ -7,15 +7,11 @@ import com.github.stuxuhai.hdata.api.Record;
 import com.github.stuxuhai.hdata.api.Writer;
 import com.github.stuxuhai.hdata.core.PluginLoader;
 import com.github.stuxuhai.hdata.exception.HDataException;
-import com.github.stuxuhai.hdata.plugin.wit.WitEnginePlugin;
 import com.github.stuxuhai.hdata.util.PluginUtils;
 import com.google.common.base.Preconditions;
-import java.util.Iterator;
-import java.util.ServiceLoader;
 import org.febit.wit.Context;
 import org.febit.wit.Engine;
 import org.febit.wit.Template;
-import org.febit.wit.io.impl.DiscardOut;
 import org.febit.wit.util.KeyValuesUtil;
 
 public class WitWriter extends Writer {
@@ -23,18 +19,12 @@ public class WitWriter extends Writer {
     public static final String KEY_INPUT = "input";
     public static final String KEY_RESULT = "__result";
 
-    protected static final DiscardOut DISCARD_OUT = new DiscardOut();
-
     private static class LazyHolder {
 
         static final Engine ENGINE;
 
         static {
             ENGINE = Engine.create("hdata-wit-writer.wim");
-            Iterator<WitEnginePlugin> iterator = ServiceLoader.load(WitEnginePlugin.class).iterator();
-            while (iterator.hasNext()) {
-                iterator.next().handle(ENGINE);
-            }
         }
     }
 
@@ -48,8 +38,7 @@ public class WitWriter extends Writer {
 
     protected Object executeTemplate(Record input) {
         Context context = template.merge(
-                KeyValuesUtil.wrap(templateParamNames, new Object[]{input}),
-                DISCARD_OUT);
+                KeyValuesUtil.wrap(templateParamNames, new Object[]{input}));
         Object result = context.get(KEY_RESULT);
         return result;
     }
