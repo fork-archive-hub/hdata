@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +39,7 @@ public class JDBCWriter extends Writer {
     private int batchInsertSize;
     private Fields columns;
     private String[] schema;
+    private List<String> upsertColumns;
     private String table;
     private String keywordEscaper;
     private Map<String, Integer> columnTypes;
@@ -51,9 +53,13 @@ public class JDBCWriter extends Writer {
         Preconditions.checkNotNull(table, "JDBC writer required property: table");
 
         String schemaStr = writerConfig.getString("schema");
-        if (schemaStr != null
-                && !schemaStr.trim().isEmpty()) {
+        if (StringUtils.isNotBlank(schemaStr)) {
             this.schema = schemaStr.split(",");
+        }
+
+        String upsertColumnsStr = writerConfig.getString(JDBCWriterProperties.UPSERT_COLUMNS);
+        if (StringUtils.isNotBlank(upsertColumnsStr)) {
+            this.upsertColumns = Arrays.asList(upsertColumnsStr.trim().split(","));
         }
 
         this.batchInsertSize = writerConfig.getInt(JDBCWriterProperties.BATCH_INSERT_SIZE, DEFAULT_BATCH_INSERT_SIZE);
@@ -68,12 +74,18 @@ public class JDBCWriter extends Writer {
         } catch (Exception e) {
             throw new HDataException(e);
         }
+
+        List<String> insertColumns;
         if (this.schema != null) {
-            prepareStatement(buildInsertSql(table, Arrays.asList(this.schema)));
+            insertColumns = Arrays.asList(this.schema);
         } else if (this.columns != null) {
-            prepareStatement(buildInsertSql(table, columns));
+            insertColumns = this.columns;
         } else {
             // TODO: read table columns by JDBC
+            insertColumns = null;
+        }
+        if (insertColumns != null) {
+            prepareStatement(buildInsertSql(table, insertColumns, this.upsertColumns));
         }
     }
 
@@ -102,21 +114,42 @@ public class JDBCWriter extends Writer {
         }
     }
 
-    private String buildInsertSql(String table, List<String> columns) {
+    private String buildInsertSql(String table, List<String> columns, List<String> upsertColumns) {
         String[] placeholder = new String[columns.size()];
         Arrays.fill(placeholder, "?");
         String sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
                 table,
                 keywordEscaper + Joiner.on(keywordEscaper + ", " + keywordEscaper).join(columns) + keywordEscaper,
                 Joiner.on(", ").join(placeholder));
-        return sql;
+        // TODO: Upsert only support mysql for now
+        return appendMysqlUpsertTail(sql, upsertColumns);
     }
 
-    private String buildInsertSql(String table, int columnSize) {
+    private String appendMysqlUpsertTail(String sql, List<String> upsertColumns) {
+        if (upsertColumns == null || upsertColumns.isEmpty()) {
+            return sql;
+        }
+        StringBuilder buf = new StringBuilder(sql);
+        buf.append(" ON DUPLICATE KEY UPDATE ");
+        for (int i = 0; i < upsertColumns.size(); i++) {
+            if (i != 0) {
+                buf.append(", ");
+            }
+            String col = upsertColumns.get(i);
+            buf.append(keywordEscaper).append(col).append(keywordEscaper)
+                    .append(" = VALUES(")
+                    .append(keywordEscaper).append(col).append(keywordEscaper)
+                    .append(")");
+        }
+        return buf.toString();
+    }
+
+    private String buildInsertSql(String table, int columnSize, List<String> upsertColumns) {
         String[] placeholder = new String[columnSize];
         Arrays.fill(placeholder, "?");
         String sql = String.format("INSERT INTO %s VALUES(%s)", table, Joiner.on(", ").join(placeholder));
-        return sql;
+        // TODO: Upsert only support mysql for now
+        return appendMysqlUpsertTail(sql, upsertColumns);
     }
 
     @Override
@@ -124,7 +157,7 @@ public class JDBCWriter extends Writer {
         try {
             if (statement == null) {
                 // TODO: statement must be prepared before execution
-                prepareStatement(buildInsertSql(table, record.size()));
+                prepareStatement(buildInsertSql(table, record.size(), this.upsertColumns));
             }
 
             for (int i = 0, len = record.size(); i < len; i++) {
