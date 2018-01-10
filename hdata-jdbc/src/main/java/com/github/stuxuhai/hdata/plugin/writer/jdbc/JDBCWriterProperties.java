@@ -11,5 +11,6 @@ public class JDBCWriterProperties {
     public static final String PARALLELISM = "parallelism";
     public static final String SCHEMA = "schema";
     public static final String KEYWORD_ESCAPER = "keyword.escaper";
+    public static final String UPSERT_COLUMNS = "upsert.columns";
 
 }

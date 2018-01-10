@@ -246,6 +246,7 @@ table|是|表名（包含数据库名或schema名），如：db.table|
 batch.insert.size|否|批量插入的记录数，默认值：10000|
 schema|否|字段名配置，一般用于writer和reader的字段名不一致时|
 keyword.escaper|否|关键字转义字符，默认为\`|
+upsert.columns|否|指定 Upsert 的字段列表，逗号分隔，目前仅支持 Mysql，默认为空(即不启用 upsert)|
 
 * hive
 
