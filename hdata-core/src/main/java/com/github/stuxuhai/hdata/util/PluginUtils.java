@@ -26,7 +26,13 @@ public class PluginUtils {
         File file = new File(PluginUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/lib/.*\\.jar", "")
                 + "/plugins/" + pluginName);
         if (!file.exists()) {
-            throw new HDataException("Plugin not found: " + pluginName);
+            String jarFilePath = System.getProperty("user.dir").replace("\\", "/") + "/out/artifacts/hdata_" + pluginName + "_jar";
+            file = new File(jarFilePath);
+            if (!file.exists()) {
+                System.err.println("未找到" + pluginName + "模块的jar包所在目录,\n" +
+                        "您可以使用Intellij IDEA自动编译" + pluginName + "模块的jar包至以下目录:\n" + jarFilePath);
+                throw new HDataException("Plugin not found: " + pluginName);
+            }
         }
 
         File[] jars = file.listFiles();

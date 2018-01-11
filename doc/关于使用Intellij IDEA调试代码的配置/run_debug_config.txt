@@ -1,0 +1,21 @@
+请将所有的 "D:\Dev\GitRepository\HData" 替换为你自己的 Hdata 项目路径
+===================================================================
+
+Main class:
+com.github.stuxuhai.hdata.CliDriver
+
+
+VM options:
+-Xss256k -Xms1G -Xmx1G -Xmn512M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+CMSParallelRemarkEnabled -XX:+DisableExplicitGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+HeapDumpOnOutOfMemoryError -XX:SoftRefLRUPolicyMSPerMB=0 -Dhdata.conf.dir="D:\Dev\GitRepository\HData\conf" -Dlog4j.configurationFile=D:\Dev\GitRepository\HData\conf\log4j2.xml
+
+
+Program arguments:
+-f D:\Dev\GitRepository\HData\bin\job.xml
+
+
+Working directory:
+D:\Dev\GitRepository\HData
+
+
+Use classpath of modules:
+hdata-core
