@@ -1,28 +1,21 @@
 package com.github.stuxuhai.hdata.plugin.excel.reader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
+import com.github.stuxuhai.hdata.api.*;
+import com.github.stuxuhai.hdata.exception.HDataException;
+import com.github.stuxuhai.hdata.plugin.excel.ExcelProperties;
+import com.github.stuxuhai.hdata.plugin.excel.ExcelUtils;
+import com.google.common.base.Preconditions;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.github.stuxuhai.hdata.api.DefaultRecord;
-import com.github.stuxuhai.hdata.api.Fields;
-import com.github.stuxuhai.hdata.api.JobContext;
-import com.github.stuxuhai.hdata.api.OutputFieldsDeclarer;
-import com.github.stuxuhai.hdata.api.PluginConfig;
-import com.github.stuxuhai.hdata.api.Reader;
-import com.github.stuxuhai.hdata.api.Record;
-import com.github.stuxuhai.hdata.api.RecordCollector;
-import com.github.stuxuhai.hdata.api.Splitter;
-import com.github.stuxuhai.hdata.exception.HDataException;
-import com.github.stuxuhai.hdata.plugin.excel.ExcelProperties;
-import com.google.common.base.Preconditions;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class ExcelReader extends Reader {
 
@@ -53,10 +46,16 @@ public class ExcelReader extends Reader {
 		if (workbook.getNumberOfSheets() > 0) {
 			Sheet sheet = workbook.getSheetAt(0);
 
+            int cellLength = 0;
+            if (sheet.getPhysicalNumberOfRows() > 0) {
+                // 先根据第一行判断列的宽度,此处不推荐使用getPhysicalNumberOfCells方法
+                cellLength = sheet.getRow(0).getLastCellNum();
+            }
+
 			if (includeColumnNames && sheet.getPhysicalNumberOfRows() > 0) {
 				Row row = sheet.getRow(0);
-				for (int cellIndex = row.getFirstCellNum(), cellLength = row
-						.getPhysicalNumberOfCells(); cellIndex < cellLength; cellIndex++) {
+				cellLength = row.getPhysicalNumberOfCells();
+				for (int cellIndex = row.getFirstCellNum(); cellIndex < cellLength; cellIndex++) {
 					fields.add(row.getCell(cellIndex).toString());
 				}
 			}
@@ -65,10 +64,11 @@ public class ExcelReader extends Reader {
 			for (int rowIndex = startRow, rowLength = sheet
 					.getPhysicalNumberOfRows(); rowIndex < rowLength; rowIndex++) {
 				Row row = sheet.getRow(rowIndex);
-				Record record = new DefaultRecord(row.getPhysicalNumberOfCells());
-				for (int cellIndex = row.getFirstCellNum(), cellLength = row
-						.getPhysicalNumberOfCells(); cellIndex < cellLength; cellIndex++) {
-					record.add(row.getCell(cellIndex).toString());
+				Record record = new DefaultRecord(cellLength);
+				for (int cellIndex = row.getFirstCellNum(); cellIndex < cellLength; cellIndex++) {
+					Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+					record.add(ExcelUtils.getValueFromCell(cell));
+
 				}
 
 				recordCollector.send(record);

@@ -1,2 +1,7 @@
 target
 /build/
+*.iml
+*.bak
+.idea
+META-INF
+out

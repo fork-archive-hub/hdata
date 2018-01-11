@@ -3,7 +3,7 @@
 <configuration>
 	<property>
 		<name>hdata.storage.default.buffer.size</name>
-		<value>16384</value>
+		<value>65536</value>
 		<description>默认storage缓冲区大小，值必须为2^n</description>
 	</property>
 	<property>
