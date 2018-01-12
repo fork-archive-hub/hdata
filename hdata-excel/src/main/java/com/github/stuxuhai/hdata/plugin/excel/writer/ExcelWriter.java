@@ -1,10 +1,8 @@
 package com.github.stuxuhai.hdata.plugin.excel.writer;
 
-import com.github.stuxuhai.hdata.api.*;
-import com.github.stuxuhai.hdata.exception.HDataException;
-import com.github.stuxuhai.hdata.plugin.excel.ExcelProperties;
-import com.github.stuxuhai.hdata.plugin.excel.ExcelUtils;
-import com.google.common.base.Preconditions;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -13,8 +11,14 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.github.stuxuhai.hdata.api.Fields;
+import com.github.stuxuhai.hdata.api.JobContext;
+import com.github.stuxuhai.hdata.api.PluginConfig;
+import com.github.stuxuhai.hdata.api.Record;
+import com.github.stuxuhai.hdata.api.Writer;
+import com.github.stuxuhai.hdata.exception.HDataException;
+import com.github.stuxuhai.hdata.plugin.excel.ExcelProperties;
+import com.google.common.base.Preconditions;
 
 public class ExcelWriter extends Writer {
 
@@ -55,7 +59,7 @@ public class ExcelWriter extends Writer {
 		for (int i = 0, len = record.size(); i < len; i++) {
 			Cell cell = row.createCell(i);
 			cell.setCellType(XSSFCell.CELL_TYPE_STRING);
-            Object value = ExcelUtils.getValueFromRecord(record.get(i));
+			Object value = record.get(i);
 			XSSFRichTextString content = new XSSFRichTextString(value != null ? value.toString() : null);
 			cell.setCellValue(content);
 		}

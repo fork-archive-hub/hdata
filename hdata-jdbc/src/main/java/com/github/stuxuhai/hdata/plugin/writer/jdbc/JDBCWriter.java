@@ -117,7 +117,7 @@ public class JDBCWriter extends Writer {
     private String buildInsertSql(String table, List<String> columns, List<String> upsertColumns) {
         String[] placeholder = new String[columns.size()];
         Arrays.fill(placeholder, "?");
-        String sql = String.format("INSERT INTO `%s`(%s) VALUES(%s)",
+        String sql = String.format("INSERT INTO %s(%s) VALUES(%s)",
                 table,
                 keywordEscaper + Joiner.on(keywordEscaper + ", " + keywordEscaper).join(columns) + keywordEscaper,
                 Joiner.on(", ").join(placeholder));
@@ -147,7 +147,7 @@ public class JDBCWriter extends Writer {
     private String buildInsertSql(String table, int columnSize, List<String> upsertColumns) {
         String[] placeholder = new String[columnSize];
         Arrays.fill(placeholder, "?");
-        String sql = String.format("INSERT INTO `%s` VALUES(%s)", table, Joiner.on(", ").join(placeholder));
+        String sql = String.format("INSERT INTO %s VALUES(%s)", table, Joiner.on(", ").join(placeholder));
         // TODO: Upsert only support mysql for now
         return appendMysqlUpsertTail(sql, upsertColumns);
     }
@@ -177,12 +177,7 @@ public class JDBCWriter extends Writer {
                 connection.commit();
             }
         } catch (SQLException e) {
-            if(e.getMessage().contains("Duplicate entry")){
-                // TODO 忽略唯一键的约束,继续执行导入操作,此处可以将重复数据导出到日志
-            }else{
-                throw new HDataException(e);
-            }
-
+            throw new HDataException(e);
         }
     }
 
@@ -198,11 +193,7 @@ public class JDBCWriter extends Writer {
                 statement.close();
             }
         } catch (SQLException e) {
-            if(e.getMessage().contains("Duplicate entry")){
-                // TODO 忽略唯一键的约束,继续执行导入操作,此处可以将重复数据导出到日志
-            }else{
-                throw new HDataException(e);
-            }
+            throw new HDataException(e);
         } finally {
             DbUtils.closeQuietly(connection);
         }
